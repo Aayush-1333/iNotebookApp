@@ -10,7 +10,7 @@ const fetchUser = async (req, res, next) => {
 
     try {
         // decoding the jwt (json web token)
-        const result = jwt.verify(token, process.env.JWT_SECRET)
+        const result = jwt.verify(token, 'Notebook90boy')
         req.user = result.user
         next()  // request is transferred to next middleware
     } catch(error) {

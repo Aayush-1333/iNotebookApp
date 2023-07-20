@@ -19,7 +19,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "mern": "concurrently \"npm run start\"  \"nodemon inotebook-Backend/index.js\" "
+    "mern": "concurrently \"nodemon inotebook-Backend/index.js\" \"npm run start\" "
   },
   "eslintConfig": {
     "extends": [

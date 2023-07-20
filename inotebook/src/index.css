@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat Alternates', sans-serif;
+}
+
+.fbox {
+    display: flex;
+}
+
+.wrap {
+    flex-wrap: wrap;
+}
+
+.my-10 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.fbox-col {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.justify-content-around {
+    justify-content: space-around;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.alignItems-center {
+    align-items: center;
+}
+
+.sidebar {
+    border: 2px solid black;
+    width: 0;
+    text-align: center;
+    background-color: beige;
+    visibility: collapse;
+}
+
+@media screen and (max-width: 450px) {
+    .sidebar {
+        font-size: 10px;
+    }
+
+    .notes {
+        font-size: 10px;
+        padding: 5px;
+    }
+}
+
+.close-btn {
+    position: relative;
+    padding: 5px;
+    text-align: end;
+}
+
+.menu-btn {
+    background: linear-gradient(45deg, lightgreen, green);
+    padding: 5px;
+    font-weight: bold;
+}
+
+.cross {
+    border-radius: 10px;
+    background-color: darkred;
+    color: white;
+    padding: 0 5px;
+}
+
+.navbar {
+    background-color: grey;
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.brand {
+    flex-grow: 0.06;
+}
+
+.nav-brand {
+    font-size: 20px;
+}
+
+.brand-image {
+    margin: 5px;
+}
+
+.nav-link {
+    flex-grow: 0.05;
+    text-decoration: none;
+    color: green;
+}
+
+.highlight {
+    text-decoration: underline solid white 3px;
+}
+
+.nav-link:hover {
+    color: lightblue;
+}
+
+.theme-btn {
+    padding: 10px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+}
+
+.btn-holder {
+    flex-grow: 1;
+    justify-content: end;
+}
+
+.theme-btn:hover {
+    border: 2px solid white;
+}
+
+.note-box {
+    border: 2px solid black;
+    padding: 30px;
+    border-radius: 10px;
+    margin: 20px;
+}
+
+.note-box-btn {
+    padding: 10px;
+    border-radius: 10px;
+    margin: 5px;
+    background: linear-gradient(25deg, green, lightgreen);
+    color: white;
+}
+
+.note-box-btn:hover {
+    border: 2px solid white;
+}
+
+.note-tag {
+    margin: 4px;
+    border-radius: 10px;
+    background-color: darkred;
+    padding: 5px;
+    color: white
+}
+
+.note-form {
+    flex-grow: 1;
+    margin: 10px;
+    padding: 30px;
+    background-color: beige;
+    border: 2px solid purple;
+    border-radius: 10px;
+}
+
+.form-input {
+    border-radius: 10px;
+    padding: 10px;
+    border: 2px solid black;
+    margin-bottom: 10px;
+}
+
+.form-input::selection {
+    border: 2px solid lightgreen;
+}

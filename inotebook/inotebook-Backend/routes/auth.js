@@ -44,7 +44,7 @@ router.post(
           id: user._id,
         }
       };
-      const authToken = jwt.sign(payload, process.env.JWT_SECRET);
+      const authToken = jwt.sign(payload, 'Notebook90boy');
 
       return res.status(200).json({ authToken });
 
@@ -87,7 +87,7 @@ router.post(
         }
 
         // Create an authToken - json web token   
-        const authToken = jwt.sign(payload, process.env.JWT_SECRET)
+        const authToken = jwt.sign(payload, 'Notebook90boy')
         res.status(200).json(authToken) 
 
         } catch (error) {

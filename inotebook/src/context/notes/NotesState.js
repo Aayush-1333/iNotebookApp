@@ -1,14 +1,24 @@
+/*
+    This is the file where all the note operations aere handled including updating states
+    and fetching, creation, deletion, ediitng as well as trggerring operation
+    specific alerts  
+*/
 import { useState } from "react";
 import NoteContext from "./NotesContext";
 
 const NoteState = (props) => {
 
-    const URL = 'http://localhost:4000';
-
+    const URL = 'http://127.0.0.1:4000';
     const initial_notes = []
 
+    // ============= State Variables ===============
     const [notes, setNotes] = useState(initial_notes)
-
+    const [editNote_id, setEditNote_id] = useState(null);
+    const [alert, setAlert] = useState({
+        visibility: 'hidden',
+        msg: 'Alert',
+        status: 'success'
+    });
     const [theme, setTheme] = useState({
         mode: 'light',
         backgroundColor: '#a39e9e',
@@ -18,19 +28,7 @@ const NoteState = (props) => {
         border: '2px solid black'
     })
 
-
-    const getNotes = async () => {
-        const response = await fetch(`${URL}/api/notes/fetchallnotes`, {
-            method: 'get',
-            headers: {
-                'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRiNGRjY2Q0NmUxNzMyMDNlMjc4NGI4In0sImlhdCI6MTY4OTU3NDg0NX0.YQUlGiVqsbFMOd021XVrJ3NLeTavw3t9zIjYCVGzELg'
-            }
-        })
-
-        const fetched_notes = await response.json()
-        setNotes(fetched_notes)
-    }
-
+    // ======================== Functions ========================
     // Toggles the theme of the web app (light mode - dark mode)
     const toggleTheme = () => {
         if (theme.mode === 'light') {
@@ -61,14 +59,54 @@ const NoteState = (props) => {
         }
     }
 
-    // Adiing a note
+    // triggers the alert based on type of operation which passed by using status parameter
+    const triggerAlert = (alertType, message) => {
+        setAlert({
+            visibility: 'visible',
+            msg: message,
+            status: alertType
+        });
+
+        setTimeout(() => {
+            setAlert({
+                visibility: 'hidden',
+                msg: 'Alert',
+                status: 'success'
+            });
+        }, 1500)
+    }
+
+    // Fetches all the notes of a specific user from the database by API call
+    const getNotes = async () => {
+        const response = await fetch(`${URL}/api/notes/fetchallnotes`, {
+            method: 'get',
+            headers: {
+                'auth-token': localStorage.getItem('authToken')
+            }
+        })
+
+        const fetched_notes = await response.json()
+        setNotes(fetched_notes);
+    }
+
+    // Fetches the note of a partiular id
+    const fetchNote = (id) => {
+        try {
+            const fetchedNote = notes.filter((element) => { return element._id === id })
+            return fetchedNote;
+        } catch (error) {
+            console.log("No note found!");
+        }
+    }
+
+    // Adding a note
     const createNote = async (user_note) => {
         try {
             const response = await fetch(`${URL}/api/notes/createnote`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRiNGRjY2Q0NmUxNzMyMDNlMjc4NGI4In0sImlhdCI6MTY4OTg0ODk1OX0.U3UFBwDA7dtLpxkbLQKPrrsb--SOjF_vp21Ev194ckM', 
+                    'auth-token': localStorage.getItem('authToken')
                 },
                 'body': JSON.stringify(user_note)
             });
@@ -76,6 +114,7 @@ const NoteState = (props) => {
 
             const newNote = await response.json();
             setNotes(notes.concat(newNote));
+            triggerAlert('success', 'Note created successfully!');
 
         } catch (error) {
             console.log({ error: error.message })
@@ -84,22 +123,49 @@ const NoteState = (props) => {
 
     // Deletes a note
     const deleteNote = async (id) => {
-        await fetch(`${URL}/api/notes/deletenote/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRiNGRjY2Q0NmUxNzMyMDNlMjc4NGI4In0sImlhdCI6MTY4OTU3NDg0NX0.YQUlGiVqsbFMOd021XVrJ3NLeTavw3t9zIjYCVGzELg'
-            }
-        });
-        getNotes();
+
+        try {
+            await fetch(`${URL}/api/notes/deletenote/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'auth-token': localStorage.getItem('authToken')
+                }
+            });
+
+            triggerAlert('danger', 'Note deleted successfully!');
+            getNotes();
+        } catch (error) {
+            console.log({error: error.message});
+        }
     }
 
     // Edits a note
-    const editNote = (id) => {
-        console.log("Editing Note")
+    const editNote = async (user_note) => {
+
+        try {
+            await fetch(`${URL}/api/notes/updatenote/${user_note._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'auth-token': localStorage.getItem('authToken')
+                },
+                body: JSON.stringify({ ...user_note })
+            });
+
+            triggerAlert('success', 'Note updated successfully!');
+
+
+        } catch (error) {
+            console.error(error.message)
+        }
+
     }
 
     return (
-        <NoteContext.Provider value={{ theme, toggleTheme, notes, getNotes, setNotes, createNote, deleteNote, editNote }}>
+        <NoteContext.Provider value={{
+            theme, toggleTheme, notes, getNotes, fetchNote,
+            setNotes, createNote, deleteNote, editNote, editNote_id, setEditNote_id, alert, setAlert, triggerAlert
+        }}>
             {props.children}
         </NoteContext.Provider>
     )

@@ -22,7 +22,7 @@ mongoConnect()
 .then(() => {
   console.log("Connected to the database!")
   app.listen(4000, () => {
-    console.log(`inotebook app listening at http://localhost:4000`)
+    console.log(`inotebook database listening at http://127.0.0.1:4000`)
   })
 })
 .catch((err) => {

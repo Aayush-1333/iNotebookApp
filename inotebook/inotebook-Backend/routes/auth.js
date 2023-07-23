@@ -31,6 +31,7 @@ router.post(
     try {
       if (user) return res.status(400).json({ error: "Email already exists!" });
 
+      // encryption of password using hashing and then adding extra characters using salt
       const salt = await bcrypt.genSalt(10);
       const secPass = await bcrypt.hash(req.body.password, salt);
       user = await Users.create({
